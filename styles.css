@@ -1,0 +1,748 @@
+/* --- CONFIGURACIÓN BÁSICA Y VARIABLES --- */
+:root {
+    /* Paleta de Colores Oficial */
+    --church-blue: #00609C; 
+    --church-blue-dark: #004B7A;
+    --text-dark: #333333;
+    --text-light: #555555;
+    --bg-light: #F8F9FA;
+    --white: #FFFFFF;
+    --accent-gray: #E0E0E0;
+    
+    /* Tipografía */
+    --font-primary: 'Noto Sans', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--bg-light);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* --- HEADER --- */
+.site-header {
+    background-color: var(--white);
+    padding-top: 120px; 
+    padding-bottom: 40px; 
+    border-bottom: 1px solid var(--accent-gray);
+    text-align: center;
+}
+
+.church-name {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.ward-name {
+    font-size: 1.8rem;
+    color: var(--church-blue);
+    font-weight: 700;
+}
+
+/* --- NAVIGATION --- */
+.main-nav {
+    position: fixed; 
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color:  var(--church-blue); 
+    transition: background-color 0.3s ease, padding 0.3s ease;
+    padding: 15px 0; 
+}
+
+
+.main-nav.scrolled {
+ background-color: rgba(255, 255, 255, 0.95); 
+    
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    padding: 10px 0;
+}
+.main-nav.scrolled .nav-links a {
+    color: var(--church-blue); /* ¡Aquí ocurre la magia! */
+}
+
+.main-nav.scrolled .nav-links a:hover {
+    color: var(--church-blue-dark); /* Azul más oscuro al hover */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: center; /* Centrado en escritorio */
+    align-items: center;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px; /* Espacio entre enlaces */
+}
+
+.nav-links a {
+    color: var(--white); /* Texto blanco siempre para ver sobre la foto */
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 10px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Sombra suave para leer sobre fotos claras */
+}
+
+.nav-links a:hover {
+    color: #CFE2F3;
+}
+
+/* Botón Hamburguesa (Oculto en PC) */
+.menu-toggle {
+    display: none; 
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: var(--white); 
+}
+.main-nav.scrolled .menu-toggle {
+    color: var(--church-blue);
+}
+.nav-links.active ~ .menu-toggle, 
+.menu-toggle.open { 
+     color: var(--white) !important;
+}
+
+/* Dropdown Styles */
+.dropdown { position: relative; }
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--white);
+    min-width: 200px;
+    top: 100%;
+    left: 0;
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: var(--text-dark); /* Texto oscuro dentro del dropdown blanco */
+    text-shadow: none;
+    padding: 12px 16px;
+    display: block;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: var(--church-blue);
+}
+
+.dropdown:hover .dropdown-content { 
+    display: block;
+ }
+ .modal.show {
+    display: flex;
+    opacity: 1; /* ¡Esto es vital! */
+}
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Más oscuro para resaltar la tarjeta */
+    backdrop-filter: blur(5px); /* Efecto borroso elegante en el fondo */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    /* Centrado perfecto Flexbox */
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: var(--white);
+    width: 90%;
+    max-width: 500px; /* Ancho máximo elegante */
+    border-radius: 12px; /* Bordes redondeados */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    overflow: hidden; /* Vital para que la barra azul respete los bordes redondeados */
+    transform: scale(0.8);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote suave */
+}
+.modal.show .modal-content {
+    transform: scale(1);
+}
+.modal-header {
+    background-color: var(--church-blue);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between; /* Título a la izq, X a la derecha */
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.modal-header h3 {
+    color: var(--white);
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* La "X" de cerrar */
+.close-modal {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--white);
+}
+
+/* 4. Cuerpo del Texto */
+.modal-body-content {
+    padding: 25px;
+    color: var(--text-dark);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Estilos para las listas que inyectamos con JS */
+.modal-body-content ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    color: var(--text-light);
+}
+
+.modal-body-content p {
+    margin-bottom: 10px;
+}
+
+.modal-body-content strong {
+    color: var(--church-blue-dark);
+}
+
+/* 5. Pie del Modal (Botón Cerrar inferior) */
+.modal-footer {
+    background-color: #f9f9f9;
+    padding: 10px 25px;
+    text-align: right; /* Botón a la derecha */
+    border-top: 1px solid #eee;
+}
+
+.btn-close-secondary {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #666;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-close-secondary:hover {
+    background-color: #eee;
+    color: #333;
+    border-color: #bbb;
+}
+
+/* --- RESPONSIVE (Móvil) --- */
+@media (max-width: 768px) {
+    .nav-container {
+        justify-content: space-between; /* Botón a la izq o derecha */
+        padding: 0 20px;
+    }
+
+    .menu-toggle {
+        display: block;
+        z-index: 1100; 
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--church-blue); 
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+
+    /* Clase para mostrar el menú */
+    .nav-links.active {
+        max-height: 500px; /* Altura suficiente para mostrar todo */
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-links a {
+        padding: 20px;
+        display: block;
+    }
+    .main-nav.scrolled .nav-links a {
+        color: var(--white); 
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .main-nav .nav-links a {
+         border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Dropdown en móvil */
+    .dropdown:hover .dropdown-content {
+        position: relative; /* Que empuje el contenido hacia abajo */
+        background-color: var(--church-blue-dark);
+        box-shadow: none;
+    }
+    
+    .dropdown-content a {
+        color: var(--white);
+    }
+}
+
+/* --- HERO IMAGE (PORTADA) --- */
+.hero-image-section {
+    background-image: url('images/plan-de-barrio-puerto-morelos-méxico.png'); 
+    background-size: cover;
+    background-position: center;
+    
+    /* --- CAMBIOS PARA EFECTO TELÓN --- */
+    position: sticky; /* CAMBIO: Antes era relative */
+    top: 0;           /* Se pega al techo de la ventana */
+    z-index: 0;       /* Se queda en el nivel base */
+    
+    /* Resto de tus propiedades iguales... */
+    height: 60vh; 
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--white);
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content-center {
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    line-height: 1.1;
+}
+
+.hero-year {
+    font-size: 1.8rem;
+    font-weight: 300;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.btn-hero {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--white);
+    color: var(--church-blue);
+    font-weight: bold;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-hero:hover {
+    background-color: #CFE2F3;
+    transform: translateY(-2px);
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+main {
+    padding-bottom: 50px;
+    position: relative; 
+    z-index: 10;
+    background-color: var(--bg-light);
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1); 
+}
+
+.content-section {
+    padding: 40px 0;
+}
+
+.intro-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto; 
+    padding-top: 60px; 
+    padding-bottom: 40px; 
+}
+
+.intro-text h2 {
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+.lead-text {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-style: italic;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* --- GRID DE METAS (4 Áreas) --- */
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.goal-card {
+    background: var(--bg-light);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-gray);
+    text-align: left;
+    transition: transform 0.2s ease;
+}
+
+.goal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.goal-card h3 {
+    color: var(--church-blue);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+/* --- SECCIÓN DE INDICADORES (STATS) --- */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-subtitle {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.stat-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 30px 20px;
+    text-align: center;
+    border-top: 4px solid var(--church-blue);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.icon-box {
+    font-size: 2rem;
+    color: var(--church-blue-dark);
+    margin-bottom: 15px;
+}
+
+.stat-card h3 {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--church-blue);
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* Stats Divididos (Adultos vs Jóvenes) */
+.split-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.split-item {
+    padding: 0 15px;
+}
+
+.split-val {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--church-blue);
+}
+
+.split-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.split-separator {
+    width: 1px;
+    height: 40px;
+    background-color: #ddd;
+}
+
+.stat-footer-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Lista Pequeña (Misioneros) */
+.mini-list {
+    text-align: left;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #f4f8fb;
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+.mini-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 0.95rem;
+}
+
+/* --- FOOTER --- */
+.site-footer {
+    background-color: #333;
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.disclaimer {
+    color: #999;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 0;
+    }
+    .nav-links a {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        width: 100%;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .hero-image-section {
+        height: 50vh;
+    }
+}
+/* --- GALERÍA INFINITA (Estilo Dinámico) --- */
+.gallery-section {
+    padding: 80px 0; /* Un poco más de aire arriba y abajo */
+    overflow: hidden;
+    background-color: var(--bg-light);
+}
+
+.scroller {
+    max-width: 100%;
+}
+
+.scroller__inner {
+    padding-block: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0; /* IMPORTANTE: Quitamos el gap para usar margen negativo */
+}
+
+/* Control del contenedor de cada tarjeta (li) */
+.scroller__inner li {
+    /* Esto hace que se encimen una sobre otra */
+    margin-right: -40px; 
+    transition: transform 0.3s ease;
+}
+
+/* ANIMACIÓN DE SCROLL */
+.scroller[data-animated="true"] {
+    overflow: hidden;
+    /* Máscara suave a los lados */
+    -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+    mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
+}
+
+.scroller[data-animated="true"] .scroller__inner {
+    width: max-content;
+    flex-wrap: nowrap;
+    /* Ajusté el tiempo a 50s para que se aprecie mejor el desorden */
+    animation: scroll 50s linear infinite; 
+}
+
+/* Pausa general al poner el mouse encima del carril */
+.scroller[data-animated="true"]:hover .scroller__inner {
+    animation-play-state: paused;
+}
+
+@keyframes scroll {
+    to {
+        /* Ajuste matemático para el scroll infinito con overlap */
+        transform: translate(calc(-50% - 20px)); 
+    }
+}
+
+/* --- ESTILO DE LAS TARJETAS (Inclinadas) --- */
+.gallery-card {
+    background: var(--white);
+    border: 4px solid var(--white); /* Marco blanco tipo foto instantánea */
+    border-radius: 4px; /* Bordes menos redondos, más tipo foto */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    width: 260px; /* Un poco más estrechas */
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transición elástica */
+    cursor: pointer;
+    position: relative; /* Necesario para z-index */
+}
+
+/* --- EL EFECTO DESORDENADO (Alternancia) --- */
+
+/* Las impares giran a la izquierda y suben un poco */
+.scroller__inner li:nth-child(odd) .gallery-card {
+    transform: rotate(-4deg) translateY(-10px);
+    z-index: 1;
+}
+
+/* Las pares giran a la derecha y bajan un poco */
+.scroller__inner li:nth-child(even) .gallery-card {
+    transform: rotate(3deg) translateY(10px);
+    z-index: 2;
+}
+
+/* Las cada 3ra tarjeta giran más fuerte (variedad) */
+.scroller__inner li:nth-child(3n) .gallery-card {
+    transform: rotate(-2deg) scale(0.95);
+    z-index: 1;
+}
+
+/* --- EL EFECTO "POP" AL PASAR EL MOUSE (Hover) --- */
+/* Cuando pasas el mouse SOBRE UNA TARJETA ESPECÍFICA */
+.gallery-card:hover {
+    transform: rotate(0deg) scale(1.15) translateY(0) !important; /* Se endereza y crece */
+    z-index: 1000 !important; /* Se pone hasta el frente de todo */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4); /* Sombra fuerte para flotar */
+    border-color: var(--church-blue); /* Borde azul elegante */
+}
+
+/* --- INTERIOR DE LA TARJETA --- */
+.card-image-wrapper {
+    height: 180px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Overlay con Lupa */
+.overlay-zoom {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 96, 156, 0.5);
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s ease;
+}
+.overlay-zoom i { color: white; font-size: 2rem; transform: scale(0.8); transition: transform 0.3s; }
+
+.gallery-card:hover .overlay-zoom { opacity: 1; }
+.gallery-card:hover .overlay-zoom i { transform: scale(1); }
+
+/* Footer de la tarjeta */
+.card-footer {
+    padding: 12px;
+    background-color: var(--white);
+    text-align: center;
+}
+
+.card-footer span {
+    display: block; font-size: 0.7rem; color: #999; text-transform: uppercase;
+}
+.card-footer strong {
+    display: block; font-size: 0.9rem; color: var(--text-dark); margin-top: 2px;
+}
