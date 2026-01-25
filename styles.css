@@ -746,3 +746,39 @@ main {
 .card-footer strong {
     display: block; font-size: 0.9rem; color: var(--text-dark); margin-top: 2px;
 }
+/* --- BOTÓN VOLVER ARRIBA --- */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--church-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 50%; /* Lo hace redondo */
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 1000; /* Para que flote sobre todo (menos el modal) */
+    
+    /* Estado inicial: Invisible y desplazado un poco abajo */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.scroll-top-btn:hover {
+    background-color: var(--church-blue-dark);
+    transform: translateY(-5px); /* Flota un poquito al hover */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Clase para mostrarlo (JS la agregará) */
+.scroll-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}

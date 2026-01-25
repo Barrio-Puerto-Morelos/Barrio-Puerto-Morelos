@@ -3,17 +3,16 @@
 import { initNavbarEffect } from './navbar.js';
 import { initMobileMenu } from './menu.js';
 import { initModals } from './modal.js';
-import { initGallery } from './gallery.js'; // <--- 1. IMPORTAR
+import { initGallery } from './gallery.js';
+import { initScrollBtn } from './scroll.js'; // <--- 1. IMPORTAR
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Iniciar Módulos
     initNavbarEffect();
     initMobileMenu();
     initModals();
+    initGallery();
+    initScrollBtn(); // <--- 2. INICIAR
     
-    // Iniciar la Galería
-    initGallery(); // <--- 2. EJECUTAR
-    
-    console.log('Sistema del Barrio cargado correctamente.');
+    console.log('Sistema cargado.');
 });
