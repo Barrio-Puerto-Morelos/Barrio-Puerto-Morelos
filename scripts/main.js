@@ -4,7 +4,8 @@ import { initNavbarEffect } from './navbar.js';
 import { initMobileMenu } from './menu.js';
 import { initModals } from './modal.js';
 import { initGallery } from './gallery.js';
-import { initScrollBtn } from './scroll.js'; // <--- 1. IMPORTAR
+import { initScrollBtn } from './scroll.js';
+import { initProgressBars } from './stats.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -12,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initModals();
     initGallery();
-    initScrollBtn(); // <--- 2. INICIAR
+    initScrollBtn(); 
+    initProgressBars();
     
     console.log('Sistema cargado.');
 });
