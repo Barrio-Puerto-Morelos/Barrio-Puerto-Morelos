@@ -12,12 +12,13 @@ export async function initGallery() {
         const response = await fetch('data/gallery.json');
         const photos = await response.json();
 
+        // 1. GENERAR HTML (Corregido: Imagen interactiva pero no arrastrable por el navegador)
         photos.forEach(photo => {
             const li = document.createElement('li');
             li.innerHTML = `
                 <div class="gallery-card" data-caption="${photo.caption}">
                     <div class="card-image-wrapper">
-                        <img src="${photo.image}" alt="${photo.alt}" loading="lazy" class="draggable-img">
+                        <img src="${photo.image}" alt="${photo.alt}" loading="lazy" draggable="false">
                         <div class="overlay-zoom"><i class="fa-solid fa-magnifying-glass-plus"></i></div>
                     </div>
                     <div class="card-footer">
@@ -28,27 +29,28 @@ export async function initGallery() {
             galleryContainer.appendChild(li);
         });
 
-        // Iniciamos la lógica de movimiento
+        // 2. INICIAR LÓGICA DE MOVIMIENTO
         initDraggableMarquee(galleryContainer);
 
-        // --- LÓGICA DE CLIC INTELIGENTE (Detectar Clic vs Arrastre) ---
-        // Usaremos las variables globales que define initDraggableMarquee
-        // Pero para el modal, lo más seguro es usar delegación aquí mismo.
-        
+        // 3. LÓGICA DEL CLIC (ZOOM)
+        // Usamos un listener en el contenedor que delega a las tarjetas
         galleryContainer.addEventListener('click', (e) => {
-            // Un atributo especial que pondremos si se arrastró mucho
+            // Si el sistema detectó que estábamos arrastrando, NO abrimos el modal
             if (galleryContainer.getAttribute('data-is-dragging') === 'true') {
-                return; // Fue un arrastre, no abrir modal
+                return; 
             }
 
+            // Buscar si el clic fue en una tarjeta
             const card = e.target.closest('.gallery-card');
             if (card && modal) {
                 const img = card.querySelector('img');
                 const caption = card.getAttribute('data-caption');
                 
-                modalTitle.textContent = caption;
-                modalBody.innerHTML = `<img src="${img.src}" style="max-width:100%; border-radius:8px;">`;
-                modal.classList.add('show');
+                if (img) {
+                    modalTitle.textContent = caption;
+                    modalBody.innerHTML = `<img src="${img.src}" style="max-width:100%; border-radius:8px;">`;
+                    modal.classList.add('show');
+                }
             }
         });
 
@@ -56,19 +58,18 @@ export async function initGallery() {
 }
 
 function initDraggableMarquee(track) {
-    // 1. Clonar items para el infinito
+    // Duplicar items
     Array.from(track.children).forEach(item => {
         track.appendChild(item.cloneNode(true));
     });
 
-    // 2. Variables
     let xPos = 0;
     let currentSpeed = 0.5;
     let isDown = false;
     let isHovering = false;
     let startX = 0;
     let scrollLeft = 0;
-    let dragDistance = 0; // NUEVO: Para medir cuánto movió el mouse
+    let dragDistance = 0; // Medidor de distancia
     let trackWidth = track.scrollWidth / 2;
 
     const animate = () => {
@@ -84,24 +85,21 @@ function initDraggableMarquee(track) {
 
     // --- EVENTOS ---
 
-    // Hover (Pausa)
+    // Hover: Pausar animación
     track.addEventListener('mouseenter', () => isHovering = true);
-    track.addEventListener('mouseleave', () => { 
-        isHovering = false; 
-        // No forzamos isDown = false aquí para permitir arrastrar fuera del área si es necesario
-    });
-    
-    // Iniciar arrastre
+    track.addEventListener('mouseleave', () => isHovering = false);
+
+    // INICIO ARRASTRE
     track.addEventListener('mousedown', (e) => {
         isDown = true;
-        dragDistance = 0; // Reseteamos contador de distancia
+        dragDistance = 0; // Reiniciamos contador
         track.style.cursor = 'grabbing';
         startX = e.pageX;
         scrollLeft = xPos;
-        track.setAttribute('data-is-dragging', 'false'); // Asumimos que es clic al principio
+        track.setAttribute('data-is-dragging', 'false'); // Asumimos clic al inicio
     });
 
-    // Mover
+    // MOVIMIENTO
     window.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         e.preventDefault();
@@ -110,38 +108,36 @@ function initDraggableMarquee(track) {
         const walk = (x - startX) * 1.5;
         xPos = scrollLeft + walk;
 
-        // Calculamos cuánto se movió en total (valor absoluto)
+        // Calculamos cuánto se movió realmente
         dragDistance = Math.abs(x - startX);
-
-        // Si movió más de 5 píxeles, ya es un arrastre, no un clic
+        
+        // Si se movió más de 5 pixeles, declaramos que es un ARRASTRE
         if (dragDistance > 5) {
             track.setAttribute('data-is-dragging', 'true');
-            // Desactivamos pointer-events en hijos MIENTRAS arrastramos para evitar parpadeos
-            track.style.pointerEvents = 'auto'; 
         }
     });
 
-    // Terminar arrastre (EN WINDOW para que detecte soltar en cualquier lado)
+    // FIN ARRASTRE (Usamos window para detectar si sueltas fuera de la galería)
     window.addEventListener('mouseup', () => {
         if (isDown) {
             isDown = false;
             track.style.cursor = 'grab';
             
-            // Pequeño timeout para resetear la bandera de arrastre
-            // Esto permite que el evento 'click' lea el estado correcto antes de borrarlo
+            // Retrasamos un poco el cambio de estado para que el evento 'click' 
+            // le dé tiempo de leer que fue un arrastre
             setTimeout(() => {
                 track.setAttribute('data-is-dragging', 'false');
             }, 50);
         }
     });
 
-    // Soporte Táctil
+    // SOPORTE TÁCTIL (Móvil)
     track.addEventListener('touchstart', (e) => { 
         isHovering = false; 
         isDown = true; 
+        dragDistance = 0;
         startX = e.touches[0].pageX; 
         scrollLeft = xPos; 
-        dragDistance = 0;
         track.setAttribute('data-is-dragging', 'false');
     });
     
@@ -152,9 +148,11 @@ function initDraggableMarquee(track) {
         const x = e.touches[0].pageX; 
         const walk = (x - startX) * 1.5; 
         xPos = scrollLeft + walk;
+        
         dragDistance = Math.abs(x - startX);
-        if(dragDistance > 5) track.setAttribute('data-is-dragging', 'true');
+        if (dragDistance > 5) track.setAttribute('data-is-dragging', 'true');
     });
 
+    // Arrancar
     setTimeout(() => { trackWidth = track.scrollWidth / 2; animate(); }, 100);
 }
