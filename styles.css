@@ -333,39 +333,82 @@ a {
 }
 
 /* --- HERO IMAGE (PORTADA) --- */
+/* --- HERO SECTION (Con Slider + Efecto Telón) --- */
 .hero-image-section {
-    background-image: url('images/plan-de-barrio-puerto-morelos-méxico.webp'); 
-    background-size: cover;
-    background-position: center;
+    /* Quitamos background-image porque ahora lo maneja el slider HTML */
     
-    /* --- CAMBIOS PARA EFECTO TELÓN --- */
-    position: sticky; /* CAMBIO: Antes era relative */
-    top: 0;           /* Se pega al techo de la ventana */
-    z-index: 0;       /* Se queda en el nivel base */
+    /* Mantenemos tu efecto "sticky" (Telón) */
+    position: sticky;
+    top: 0;
+    z-index: 0; 
     
-    /* Resto de tus propiedades iguales... */
-    height: 60vh; 
+    /* Dimensiones y centrado */
+    height: 60vh;
     min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: var(--white);
+    
+    /* Importante para que el slider absoluto se posicione respecto a esto */
+    position: sticky; 
+    overflow: hidden; /* Corta lo que sobre del video/imagen */
 }
 
+/* NUEVO: El Contenedor del Slider (Va al fondo) */
+.hero-background-slider {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: -2; /* Lo mandamos bien atrás */
+}
+
+/* NUEVO: Cada Slide individual */
+.hero-slide {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    opacity: 0; /* Oculto por defecto */
+    transition: opacity 1.5s ease-in-out; /* Transición suave */
+}
+
+.hero-slide.active {
+    opacity: 1; /* El activo se muestra */
+}
+
+/* Ajuste de imágenes y video para llenar todo (Cover) */
+.hero-slide img, 
+.hero-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Clave: recorta para llenar sin deformar */
+}
+
+/* .hero-overlay existente (Le agregamos fondo oscuro) */
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* 40% negro para leer el texto sobre el video */
+    z-index: -1; /* Encima del slider (-2), pero debajo del texto */
+    
+    /* Flexbox para centrar el contenido */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Contenido (Texto) */
 .hero-content-center {
-    z-index: 2;
+    z-index: 2; /* Arriba de todo */
+    position: relative;
 }
 
 .hero-title {
@@ -397,7 +440,6 @@ a {
     background-color: #CFE2F3;
     transform: translateY(-2px);
 }
-
 /* --- CONTENIDO PRINCIPAL --- */
 main {
     padding-bottom: 50px;
@@ -620,17 +662,35 @@ main {
 }
 
 .scroller {
-    max-width: 100%;
+    max-width: 100%; 
+    overflow: hidden; 
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
 .scroller__inner {
-    padding-block: 2rem;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0; /* IMPORTANTE: Quitamos el gap para usar margen negativo */
+    flex-wrap: nowrap;
+    gap: 1rem;
+    width: max-content;
+    
+    /* CURSOR: Manita abierta por defecto */
+    cursor: grab; 
+    
+    /* BLOQUEO DE SELECCIÓN: Esto evita que el texto/imagen se "jalen" o pongan azules */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+/Edge */
+    user-select: none;         /* Estándar */
+    
+    transform: translateX(0);
+    will-change: transform;
+}
+.scroller__inner:active {
+    cursor: grabbing; 
+ 
 }
 
-/* Control del contenedor de cada tarjeta (li) */
 .scroller__inner li {
     /* Esto hace que se encimen una sobre otra */
     margin-right: -40px; 
@@ -675,6 +735,8 @@ main {
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transición elástica */
     cursor: pointer;
     position: relative; /* Necesario para z-index */
+    pointer-events: none; /* La imagen ignora los clics (pasan a la tarjeta) */
+    -webkit-user-drag: none;
 }
 
 /* --- EL EFECTO DESORDENADO (Alternancia) --- */
@@ -712,6 +774,11 @@ main {
     width: 100%;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+}
+.draggable-img {
+    pointer-events: none; /* La imagen ignora el mouse */
+    -webkit-user-drag: none;
 }
 
 .card-image-wrapper img {

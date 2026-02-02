@@ -1,0 +1,86 @@
+[
+    {
+        "image": "images/actividad-galletas.webp",
+        "title": "Actividad de la Juventud",
+        "caption": "Cocinando Galletas",
+        "date": "2025",
+        "alt": "Cocinando Galletas"
+    },
+    {
+        "image": "images/noche-navideña.webp",
+        "title": "Fiesta de Navidad",
+        "caption": "Fiesta de Navidad",
+        "date": "Diciembre 2025",
+        "alt": "Fiesta de Navidad"
+    },
+    {
+        "image": "images/actividad-servicio.webp",
+        "title": "Manos que Ayudan",
+        "caption": "Manos que Ayudan",
+        "date": "2025",
+        "alt": "Actividad de servicio"
+    },
+    {
+        "image": "images/viaje-al-templo-2025.webp",
+        "title": "Viaje al Templo",
+        "caption": "Viaje al Templo",
+        "date": "2025",
+        "alt": "Grupo frente al templo"
+    },
+    {
+        "image": "images/campamento-mujeres-jovenes.webp",
+        "title": "Campamento de Jóvenes",
+        "caption": "Visita Cenote",
+        "date": "2025",
+        "alt": "Mujeres Jóvenes en cenote"
+    },
+    {
+        "image": "images/clase-de-surf-sup.webp",
+        "title": "Clase de Surf Paddle",
+        "caption": "Clase de Surf Sup",
+        "date": "2025",
+        "alt": "Clase de Surf"
+    },
+    {
+        "image": "images/capacitacion-consultores-estaca.webp",
+        "title": "Capacitación de Historia Familiar",
+        "caption": "Actividad de Historia Familiar",
+        "date": "2025",
+        "alt": "Capacitación Historia Familiar"
+    },
+    {
+        "image": "images/bautismo-eusebia.webp",
+        "title": "Bautismo de la hermana Eusebia",
+        "caption": "Hermana Eusebia Bautismo",
+        "date": "2026",
+        "alt": "Bautismo hermana Eusebia"
+    },
+    {
+        "image": "images/elder-hernandez.webp",
+        "title": "Apartamiento Elder Hernandez",
+        "caption": "Misión Puebla Este",
+        "date": "2026",
+        "alt": "Elder Hernandez"
+    },
+    {
+        "image": "images/ministracion-mujeres-jovenes.webp",
+        "title": "Noche de Visitas",
+        "caption": "Ministrar con amor",
+        "date": "2025",
+        "alt": "Mujeres Jóvenes ministrando"
+    },
+    {
+        "image": "images/mujeres-jovenes.webp",
+        "title": "Taller de maquillaje",
+        "caption": "Actividad de la Juventud",
+        "date": "2025",
+        "alt": "Taller de maquillaje"
+    },
+    {
+        "image": "images/actividad-misional.webp",
+        "title": "Reunión Misioneros retornados",
+        "caption": "Actividad Misional",
+        "date": "Enero 2026",
+        "alt": "Reunión misional"
+    }
+]
