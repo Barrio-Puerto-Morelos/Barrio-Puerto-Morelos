@@ -82,5 +82,19 @@
         "caption": "Actividad Misional",
         "date": "Enero 2026",
         "alt": "Reunión misional"
+    },
+   {
+        "image": "images/bautismo-abril-2026.webp",
+        "title": "Hermana Abril",
+        "caption": "Bautismo de la hermana Abril",
+        "date": "Febrero 2026",
+        "alt": "Bautismo Abril 2026"
+    },
+    {
+        "image": "images/hermana-yama-mision-mexico-este.webp",
+        "title": "Llamamiento misional hermana Yama Misión México Este",
+        "caption": "Llamamiento misional hermana Yama",
+        "date": "Febrero 2026",
+        "alt": "Llamamiento misional hermana Yama"
     }
 ]
