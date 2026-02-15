@@ -7,7 +7,7 @@ export function initHeroSlider() {
     if (slides.length === 0) return;
 
     let currentSlide = 0;
-    const slideInterval = 13000; // 5 segundos por imagen
+    const slideInterval = 7000; // 5 segundos por imagen
 
     const nextSlide = () => {
         // 1. Ocultar actual
