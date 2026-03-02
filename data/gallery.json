@@ -51,7 +51,7 @@
     {
         "image": "images/bautismo-eusebia.webp",
         "title": "Bautismo de la hermana Eusebia",
-        "caption": "Hermana Eusebia Bautismo",
+        "caption": "Bienvenida Hermana Eusebia",
         "date": "2026",
         "alt": "Bautismo hermana Eusebia"
     },
@@ -98,7 +98,7 @@
         "alt": "Llamamiento misional hermana Yama"
     },
      {
-        "image": "images/bautismo-leo.webp",
+        "image": "images/bautismo-leonardo-15-febrero.webp",
         "title": "Bautismo de Leo",
         "caption": "Bautismo de Leo",
         "date": "Febrero 2026",
@@ -110,5 +110,19 @@
         "caption": "Dia de Picleball",
         "date": "Febrero 2026",
         "alt": "Dia de Barrio"
+    },
+    {
+        "image": "images/actividad-mj-galletas.webp",
+        "title": "Actividad Mujeres Jovenes",
+        "caption": "Haciendo Galletas",
+        "date": "Febrero 2026",
+        "alt": "Haciendo Galletas"
+    },
+    {
+        "image": "images/actividad-mj-febrero.webp",
+        "title": "Intercambio Mujeres Jovenes",
+        "caption": "Día de la amistad",
+        "date": "Febrero 2026",
+        "alt": "Día de la amistad"
     }
 ]
