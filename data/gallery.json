@@ -51,7 +51,7 @@
     {
         "image": "images/bautismo-eusebia.webp",
         "title": "Bautismo de la hermana Eusebia",
-        "caption": "Hermana Eusebia Bautismo",
+        "caption": "Bienvenida Hermana Eusebia",
         "date": "2026",
         "alt": "Bautismo hermana Eusebia"
     },
@@ -98,7 +98,7 @@
         "alt": "Llamamiento misional hermana Yama"
     },
      {
-        "image": "images/bautismo-leo.webp",
+        "image": "images/bautismo-leonardo-15-febrero.webp",
         "title": "Bautismo de Leo",
         "caption": "Bautismo de Leo",
         "date": "Febrero 2026",
@@ -110,19 +110,5 @@
         "caption": "Dia de Picleball",
         "date": "Febrero 2026",
         "alt": "Dia de Barrio"
-    },
-    {
-        "image": "images/parque-extremo.webp",
-        "title": "Excursion al parque extremo",
-        "caption": "Parque Xtremo",
-        "date": "Marzo2026",
-        "alt": "Excursion al parque extremo"
-    },
-    {
-        "image": "images/viaje-al-templo-marzo.webp",
-        "title": "Viaje al templo estaca Playa del Carmen",
-        "caption": "Excursion al templo solo Jovenes",
-        "date": "Marzo 2026",
-        "alt": "Viaje al templo de la Juventud"
     }
 ]

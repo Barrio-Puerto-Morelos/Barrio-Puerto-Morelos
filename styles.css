@@ -159,11 +159,7 @@ a {
 .dropdown:hover .dropdown-content { 
     display: block;
  }
- .modal.show {
-    display: flex;
-    opacity: 1; /* ¡Esto es vital! */
-}
-.modal {
+ .modal {
     display: none; 
     position: fixed; 
     z-index: 2000; 
@@ -180,6 +176,11 @@ a {
     justify-content: center;
     align-items: center;
 }
+ .modal.show {
+    display: flex;
+    opacity: 1; /* ¡Esto es vital! */
+}
+
 .modal-content {
     background-color: var(--white);
     width: 90%;
@@ -655,151 +656,151 @@ main {
     }
 }
 /* --- GALERÍA INFINITA (Estilo Dinámico) --- */
+/* ==========================================================================
+   SECCIÓN DE GALERÍA (LIMPIO Y CORREGIDO)
+   ========================================================================== */
+
 .gallery-section {
-    padding: 80px 0; /* Un poco más de aire arriba y abajo */
+    padding: 80px 0;
     overflow: hidden;
     background-color: var(--bg-light);
 }
 
-.scroller {
-    max-width: 100%; 
-    overflow: hidden; 
+/* --- CONTENEDOR PRINCIPAL Y FLECHAS --- */
+.scroller-wrapper {
     position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--church-blue);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-nav-btn:hover {
+    background-color: #002244;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.left-btn { left: 0; }
+.right-btn { right: 0; }
+
+/* --- EL CARRETE (Pista de movimiento controlada por JS) --- */
+.scroller {
+    width: 100%;
+    overflow: hidden;
+    /* Máscara para que se desvanezca suave a los lados */
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
     mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
 .scroller__inner {
     display: flex;
     flex-wrap: nowrap;
-    gap: 1rem;
     width: max-content;
-    cursor: grab;
-    
-    /* Esto es importante para que no se seleccione el texto al arrastrar */
-    -webkit-user-select: none;
-    user-select: none;
-    
-    transform: translateX(0);
+    gap: 0; /* El espacio lo da el margin negativo de abajo */
+    cursor: default; /* Sin manita de arrastre */
     will-change: transform;
-}
-.scroller__inner:active {
-    cursor: grabbing; 
- 
 }
 
 .scroller__inner li {
+    list-style: none;
     /* Esto hace que se encimen una sobre otra */
     margin-right: -40px; 
+    padding: 20px 0; /* Espacio vertical para que las rotadas no se corten */
     transition: transform 0.3s ease;
 }
 
-/* ANIMACIÓN DE SCROLL */
-.scroller[data-animated="true"] {
-    overflow: hidden;
-    /* Máscara suave a los lados */
-    -webkit-mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
-    mask: linear-gradient(90deg, transparent, white 5%, white 95%, transparent);
-}
-
-.scroller[data-animated="true"] .scroller__inner {
-    width: max-content;
-    flex-wrap: nowrap;
-    /* Ajusté el tiempo a 50s para que se aprecie mejor el desorden */
-    animation: scroll 50s linear infinite; 
-}
-
-/* Pausa general al poner el mouse encima del carril */
-.scroller[data-animated="true"]:hover .scroller__inner {
-    animation-play-state: paused;
-}
-
-@keyframes scroll {
-    to {
-        /* Ajuste matemático para el scroll infinito con overlap */
-        transform: translate(calc(-50% - 20px)); 
-    }
-}
-
-/* --- ESTILO DE LAS TARJETAS (Inclinadas) --- */
+/* --- LAS TARJETAS (Efecto Fotos Desordenadas) --- */
 .gallery-card {
     background: var(--white);
-    border: 4px solid var(--white); /* Marco blanco tipo foto instantánea */
-    border-radius: 4px; /* Bordes menos redondos, más tipo foto */
+    border: 4px solid var(--white);
+    border-radius: 4px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    width: 260px; /* Un poco más estrechas */
+    width: 260px;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transición elástica */
-    cursor: pointer;
-    position: relative; /* Necesario para z-index */
-    pointer-events: none; /* La imagen ignora los clics (pasan a la tarjeta) */
-    -webkit-user-drag: none;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Movimiento rebotón */
+    cursor: pointer; /* Manita normal de clic */
+    position: relative;
+    /* ELIMINADO: pointer-events: none. Ahora sí detectará los clics */
 }
 
-/* --- EL EFECTO DESORDENADO (Alternancia) --- */
-
-/* Las impares giran a la izquierda y suben un poco */
+/* Desorden: Impares giran a la izquierda */
 .scroller__inner li:nth-child(odd) .gallery-card {
     transform: rotate(-4deg) translateY(-10px);
     z-index: 1;
 }
 
-/* Las pares giran a la derecha y bajan un poco */
+/* Desorden: Pares giran a la derecha */
 .scroller__inner li:nth-child(even) .gallery-card {
     transform: rotate(3deg) translateY(10px);
     z-index: 2;
 }
 
-/* Las cada 3ra tarjeta giran más fuerte (variedad) */
+/* Desorden: Múltiplos de 3 varían el tamaño */
 .scroller__inner li:nth-child(3n) .gallery-card {
     transform: rotate(-2deg) scale(0.95);
     z-index: 1;
 }
 
-/* --- EL EFECTO "POP" AL PASAR EL MOUSE (Hover) --- */
-/* Cuando pasas el mouse SOBRE UNA TARJETA ESPECÍFICA */
-.gallery-card:hover {
+/* --- EL EFECTO "POP" AL PASAR EL MOUSE --- */
+/* Lo aplicamos al <li> para que agrupe todo el efecto */
+.scroller__inner li:hover .gallery-card {
     transform: rotate(0deg) scale(1.15) translateY(0) !important; /* Se endereza y crece */
-    z-index: 1000 !important; /* Se pone hasta el frente de todo */
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4); /* Sombra fuerte para flotar */
-    border-color: var(--church-blue); /* Borde azul elegante */
+    z-index: 1000 !important; /* Salta al frente */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: var(--church-blue);
 }
 
-/* --- INTERIOR DE LA TARJETA --- */
+/* --- INTERIOR DE LA TARJETA (Imagen y Lupa) --- */
 .card-image-wrapper {
     height: 180px;
     width: 100%;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
-}
-.draggable-img {
-    pointer-events: none; /* La imagen ignora el mouse */
-    -webkit-user-drag: none;
 }
 
 .card-image-wrapper img {
-    transition: transform 0.5s ease;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease; /* Para el zoom interior */
 }
 
-/* Overlay con Lupa */
+/* La Lupa Invisible por defecto */
 .overlay-zoom {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 48, 87, 0.6); /* Azul iglesia semitransparente */
+    background-color: rgba(0, 48, 87, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0; /* OCULTO */
-    transition: all 0.3s ease; /* Aparición suave */
-    z-index: 10; /* Asegura que esté ENCIMA de la imagen */
-    pointer-events: none; /* CLAVE: Deja pasar los clics a la tarjeta */
+    opacity: 0; /* Oculto */
+    transition: all 0.3s ease;
+    z-index: 10;
+    pointer-events: none; /* Deja que el clic pase directo a la tarjeta */
 }
+
 .overlay-zoom i {
     color: white;
     font-size: 2rem;
@@ -807,10 +808,20 @@ main {
     transition: transform 0.3s ease;
 }
 
-.gallery-card:hover .overlay-zoom { opacity: 1; }
-.gallery-card:hover .overlay-zoom i { transform: scale(1.1); }
+/* Mostrar Lupa y Zoom interior al pasar el mouse por el LI */
+.scroller__inner li:hover .overlay-zoom {
+    opacity: 1;
+}
 
-/* Footer de la tarjeta */
+.scroller__inner li:hover .overlay-zoom i {
+    transform: scale(1.1);
+}
+
+.scroller__inner li:hover .card-image-wrapper img {
+    transform: scale(1.1); /* La foto hace un ligero zoom */
+}
+
+/* --- FOOTER DE LA TARJETA --- */
 .card-footer {
     padding: 12px;
     background-color: var(--white);
@@ -818,10 +829,17 @@ main {
 }
 
 .card-footer span {
-    display: block; font-size: 0.7rem; color: #999; text-transform: uppercase;
+    display: block; 
+    font-size: 0.7rem; 
+    color: #999; 
+    text-transform: uppercase;
 }
+
 .card-footer strong {
-    display: block; font-size: 0.9rem; color: var(--text-dark); margin-top: 2px;
+    display: block; 
+    font-size: 0.9rem; 
+    color: var(--text-dark); 
+    margin-top: 2px;
 }
 /* --- BOTÓN VOLVER ARRIBA --- */
 .scroll-top-btn {
