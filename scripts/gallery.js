@@ -12,7 +12,7 @@ export async function initGallery() {
         const response = await fetch('data/gallery.json');
         const photos = await response.json();
 
-        // 1. GENERAR HTML (Corregido: Imagen interactiva pero no arrastrable por el navegador)
+        // 1. GENERAR HTML
         photos.forEach(photo => {
             const li = document.createElement('li');
             li.innerHTML = `
@@ -33,33 +33,35 @@ export async function initGallery() {
         initDraggableMarquee(galleryContainer);
 
         // 3. LÓGICA DEL CLIC (ZOOM)
-        // Usamos un listener en el contenedor que delega a las tarjetas
         galleryContainer.addEventListener('click', (e) => {
-            // Si el sistema detectó que estábamos arrastrando, NO abrimos el modal
+            // Si el atributo es 'true', significa que el usuario estaba arrastrando, no haciendo clic.
             if (galleryContainer.getAttribute('data-is-dragging') === 'true') {
                 return; 
             }
 
-            // Buscar si el clic fue en una tarjeta
             const card = e.target.closest('.gallery-card');
             if (card && modal) {
                 const img = card.querySelector('img');
                 const caption = card.getAttribute('data-caption');
                 
                 if (img) {
-                    modalTitle.textContent = caption;
-                    modalBody.innerHTML = `<img src="${img.src}" style="max-width:100%; border-radius:8px;">`;
+                    modalTitle.textContent = caption || "Detalle de imagen";
+                    modalBody.innerHTML = `<img src="${img.src}" style="width:100%; height:auto; display:block; border-radius:8px;">`;
                     modal.classList.add('show');
+                    // Asegúrate de que el modal tenga display: block o similar en tu CSS al tener la clase .show
                 }
             }
         });
 
-    } catch (error) { console.error('Error galería:', error); }
+    } catch (error) { 
+        console.error('Error cargando la galería:', error); 
+    }
 }
 
 function initDraggableMarquee(track) {
-    // Duplicar items
-    Array.from(track.children).forEach(item => {
+    // Duplicar items para el efecto infinito
+    const items = Array.from(track.children);
+    items.forEach(item => {
         track.appendChild(item.cloneNode(true));
     });
 
@@ -69,11 +71,15 @@ function initDraggableMarquee(track) {
     let isHovering = false;
     let startX = 0;
     let scrollLeft = 0;
-    let dragDistance = 0; // Medidor de distancia
+    let dragDistance = 0;
     let trackWidth = track.scrollWidth / 2;
 
     const animate = () => {
-        if (!isDown && !isHovering) xPos -= currentSpeed;
+        if (!isDown && !isHovering) {
+            xPos -= currentSpeed;
+        }
+        
+        // Reset infinito
         if (Math.abs(xPos) >= trackWidth) xPos = 0;
         if (xPos > 0) xPos = -trackWidth;
         
@@ -81,78 +87,92 @@ function initDraggableMarquee(track) {
         requestAnimationFrame(animate);
     };
 
-    window.addEventListener('resize', () => trackWidth = track.scrollWidth / 2);
+    window.addEventListener('resize', () => {
+        trackWidth = track.scrollWidth / 2;
+    });
 
-    // --- EVENTOS ---
+    // --- EVENTOS DE RATÓN ---
 
-    // Hover: Pausar animación
     track.addEventListener('mouseenter', () => isHovering = true);
-    track.addEventListener('mouseleave', () => isHovering = false);
+    track.addEventListener('mouseleave', () => {
+        isHovering = false;
+        // Si el usuario sale del contenedor mientras arrastra, forzamos el fin del drag
+        if (isDown) {
+            isDown = false;
+            track.style.cursor = 'grab';
+        }
+    });
 
-    // INICIO ARRASTRE
     track.addEventListener('mousedown', (e) => {
         isDown = true;
-        dragDistance = 0; // Reiniciamos contador
+        dragDistance = 0;
         track.style.cursor = 'grabbing';
         startX = e.pageX;
         scrollLeft = xPos;
-        track.setAttribute('data-is-dragging', 'false'); // Asumimos clic al inicio
+        // Inicialmente asumimos que es un clic
+        track.setAttribute('data-is-dragging', 'false');
     });
 
-    // MOVIMIENTO
     window.addEventListener('mousemove', (e) => {
         if (!isDown) return;
-        e.preventDefault();
         
         const x = e.pageX;
-        const walk = (x - startX) * 1.5;
+        const walk = (x - startX) * 1.2; // Sensibilidad de arrastre
         xPos = scrollLeft + walk;
 
-        // Calculamos cuánto se movió realmente
         dragDistance = Math.abs(x - startX);
         
-        // Si se movió más de 5 pixeles, declaramos que es un ARRASTRE
+        // Umbral de 5px para diferenciar clic de arrastre
         if (dragDistance > 5) {
             track.setAttribute('data-is-dragging', 'true');
         }
     });
 
-    // FIN ARRASTRE (Usamos window para detectar si sueltas fuera de la galería)
     window.addEventListener('mouseup', () => {
         if (isDown) {
             isDown = false;
             track.style.cursor = 'grab';
             
-            // Retrasamos un poco el cambio de estado para que el evento 'click' 
-            // le dé tiempo de leer que fue un arrastre
+            // IMPORTANTE: Retraso de 150ms para que el evento 'click' 
+            // alcance a leer el atributo 'true' antes de resetearlo
             setTimeout(() => {
                 track.setAttribute('data-is-dragging', 'false');
-            }, 50);
+            }, 150);
         }
     });
 
-    // SOPORTE TÁCTIL (Móvil)
+    // --- EVENTOS TÁCTILES (MÓVIL) ---
+    
     track.addEventListener('touchstart', (e) => { 
-        isHovering = false; 
         isDown = true; 
         dragDistance = 0;
         startX = e.touches[0].pageX; 
         scrollLeft = xPos; 
         track.setAttribute('data-is-dragging', 'false');
-    });
-    
-    window.addEventListener('touchend', () => { isDown = false; });
-    
+    }, { passive: true });
+
     track.addEventListener('touchmove', (e) => { 
         if(!isDown) return; 
         const x = e.touches[0].pageX; 
-        const walk = (x - startX) * 1.5; 
+        const walk = (x - startX) * 1.2; 
         xPos = scrollLeft + walk;
         
         dragDistance = Math.abs(x - startX);
         if (dragDistance > 5) track.setAttribute('data-is-dragging', 'true');
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+        if (isDown) {
+            isDown = false;
+            setTimeout(() => {
+                track.setAttribute('data-is-dragging', 'false');
+            }, 150);
+        }
     });
 
-    // Arrancar
-    setTimeout(() => { trackWidth = track.scrollWidth / 2; animate(); }, 100);
+    // Iniciar animación tras pequeño delay para calcular anchos correctamente
+    setTimeout(() => { 
+        trackWidth = track.scrollWidth / 2; 
+        animate(); 
+    }, 200);
 }
