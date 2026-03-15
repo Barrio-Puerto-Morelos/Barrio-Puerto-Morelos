@@ -110,5 +110,20 @@
         "caption": "Dia de Picleball",
         "date": "Febrero 2026",
         "alt": "Dia de Barrio"
+    },
+    {
+        "image": "images/parque-extremo.webp",
+        "title": "Excursión al Parque Extremo",
+        "caption": "Viaje a Merida Parque extremos",
+        "date": "Marzo 2026",
+        "alt": "Excursión al Parque Extremo"
+    },
+    {
+        "image":"images/viaje-al-templo-marzo.webp",
+        "title": "Viaje al Templo Marzo 2026",
+        "caption": "Viaje al Templo Marzo 2026",
+        "date": "Marzo 2026",
+        "alt": "Viaje al Templo Marzo 2026"
     }
+    
 ]
